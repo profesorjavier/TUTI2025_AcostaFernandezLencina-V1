@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <meta charset="UTF-8" />
+    <title th:text="${familia.nroFamilia == null} ? 'Nueva Familia' : 'Editar Familia'">Formulario Familia</title>
+</head>
+<body>
+	<body class="bg-light">
+	<div class="container mt-4">
+
+<h1 th:text="${familia.nroFamilia == null} ? 'Nueva Familia' : 'Editar Familia'"></h1>
+
+<!-- 🧾 FORMULARIO DE FAMILIA -->
+<form th:action="@{/familias/guardar}" th:object="${familia}" method="post">
+    <input type="hidden" th:field="*{nroFamilia}" />
+
+    <fieldset>
+        <legend>Datos de la Familia</legend>
+
+        <label for="nombreFamilia">Nombre:</label>
+        <input type="text" id="nombreFamilia" th:field="*{nombreFamilia}" required />
+        <br/>
+    </fieldset>
+
+    <br/>
+
+    <!-- 👪 INTEGRANTES DE LA FAMILIA -->
+    <fieldset>
+        <legend>Integrantes</legend>
+
+        <!-- Mostrar los integrantes ya cargados (solo lectura) -->
+        <div th:if="${familia.integrantes != null}">
+            <div th:each="integ : ${familia.integrantes}">
+                <div>
+                    <strong>DNI:</strong> <span th:text="${integ.dni}"></span><br/>
+                    <strong>Apellido:</strong> <span th:text="${integ.apellido}"></span><br/>
+                    <strong>Nombre:</strong> <span th:text="${integ.nombre}"></span><br/>
+                    <strong>Fecha de Nacimiento:</strong> <span th:text="${integ.fechaNacimiento}"></span><br/>
+                    <strong>Ocupación:</strong> <span th:text="${integ.ocupacion}"></span><br/><br/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agregar un nuevo integrante -->
+        <h3>Agregar nuevo integrante</h3>
+        <label for="dniNuevo">DNI:</label>
+        <input type="number" name="nuevoDni" id="dniNuevo" required><br/>
+
+        <label for="apellidoNuevo">Apellido:</label>
+        <input type="text" name="nuevoApellido" id="apellidoNuevo" required><br/>
+
+        <label for="nombreNuevo">Nombre:</label>
+        <input type="text" name="nuevoNombre" id="nombreNuevo" required><br/>
+
+        <label for="fechaNacimientoNuevo">Fecha de Nacimiento:</label>
+        <input type="date" name="nuevoFechaNacimiento" id="fechaNacimientoNuevo" required><br/>
+
+        <label for="ocupacionNuevo">Ocupación:</label>
+        <select name="nuevoOcupacion" id="ocupacionNuevo" required>
+            <option value="">-- Seleccionar --</option>
+            <option value="Desempleado">Desempleado</option>
+            <option value="Empleado">Empleado</option>
+            <option value="Estudiante">Estudiante</option>
+            <option value="Ama de casa">Ama de casa</option>
+            <option value="Otro">Otro</option>
+        </select>
+    </fieldset>
+
+    <br/>
+    <button type="submit">Guardar Familia</button>
+    <a th:href="@{/familias/listar}">Cancelar</a>
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="nav">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" th:href="@{/menu}">🏠 Organización</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/familias/menu}">👨‍👩‍👧 Familias</a></li>
+                        <li class="nav-item"><a class="nav-link disabled">🎒 Escolaridad</a></li>
+                        <li class="nav-item"><a class="nav-link disabled">💊 Salud</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

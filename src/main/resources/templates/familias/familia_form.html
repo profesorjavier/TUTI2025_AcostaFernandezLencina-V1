@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo"
+            th:text="${modo == 'crear' ? 'Nueva Familia' :
+                      (modo == 'editar' ? 'Editar Familia' : 'Reactivar Familia')}">Formulario Familia</title>
+</head>
+
+<div layout:fragment="contenido">
+
+    <h2 class="text-primary"
+        th:text="${modo == 'crear' ? '➕ Nueva Familia' :
+                 (modo == 'editar' ? '✏️ Editar Familia' : '♻️ Reactivar Familia')}">Formulario Familia</h2>
+
+    <!-- Formulario principal -->
+    <form th:action="@{/familias/guardar}" method="post" th:object="${familia}" class="mb-4">
+        <input type="hidden" th:field="*{nroFamilia}"/>
+
+        <div class="mb-3">
+            <label for="nombreFamilia" class="form-label">Nombre de la Familia</label>
+            <input type="text" th:field="*{nombreFamilia}" class="form-control" required/>
+        </div>
+
+        <!-- 🔽 Solo si está en modo crear, permitir agregar integrante inicial -->
+        <div th:if="${modo == 'crear'}">
+            <h5 class="text-secondary">Agregar Integrante Inicial</h5>
+            <div class="row mb-2">
+                <div class="col-md-2"><input name="nuevoDni" class="form-control" placeholder="DNI"/></div>
+                <div class="col-md-2"><input name="nuevoApellido" class="form-control" placeholder="Apellido"/></div>
+                <div class="col-md-2"><input name="nuevoNombre" class="form-control" placeholder="Nombre"/></div>
+                <div class="col-md-3"><input name="nuevoFechaNacimiento" class="form-control" placeholder="AAAA-MM-DD"/></div>
+                <div class="col-md-3">
+                    <select name="nuevoOcupacion" class="form-select">
+                        <option value="">-- Ocupación --</option>
+                        <option>Estudiante</option>
+                        <option>Desempleado</option>
+                        <option>Empleado</option>
+                        <option>Ama de casa</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔄 Reactivar desde vista reactiva (solo mostrar si modo = reactivar) -->
+        <div th:if="${modo == 'reactivar'}" class="alert alert-warning">
+            <p>Esta familia está inactiva. Puede actualizar el nombre si lo desea y presionar guardar para reactivarla.</p>
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Guardar</button>
+    </form>
+
+    <!-- Acciones secundarias solo si se está editando -->
+    <div th:if="${modo == 'editar'}" class="mt-3">
+        <a th:href="@{'/familias/ver/' + ${familia.nroFamilia}}" class="btn btn-outline-info">👁️ Ver integrantes</a>
+        <a th:href="@{'/familias/' + ${familia.nroFamilia} + '/nuevoIntegrante'}" class="btn btn-outline-success">➕ Agregar integrante</a>
+    </div>
+
+    <!-- Acciones comunes -->
+    <div class="mt-3">
+        <a th:href="@{/familias/listar}" class="btn btn-outline-secondary">⬅️ Volver</a>
+    </div>
+
+</div>
