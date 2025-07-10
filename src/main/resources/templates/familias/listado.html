@@ -6,7 +6,7 @@
     <title layout:fragment="titulo">ABM Familias</title>
 </head>
 
-<div layout:fragment="contenido">
+<div layout:fragment="content">
 
     <h1 class="text-primary mb-4"
         th:text="${modo != null and modo.equals('completo')} ? 'Listado Completo de Familias e Integrantes' : 'ABM Familias'">
@@ -89,7 +89,7 @@
                     <a th:href="@{'/familias/inactivar/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-danger"
                        onclick="return confirm('¿Inactivar esta familia?')">🗑️</a>
                     <a th:href="@{'/familias/ver/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-info">👁️</a>
-                    <a th:href="@{'/familias/' + ${f.nroFamilia} + '/nuevoIntegrante'}"
+                    <a th:href="@{'/familias/' + ${f.nroFamilia} + '/integrantes/nuevo'}"
                        class="btn btn-sm btn-outline-success">➕</a>
                 </td>
             </tr>

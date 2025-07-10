@@ -23,7 +23,7 @@ public abstract class Persona {
     @Column(nullable = false)
     private String apellido;
 
-    // Fecha de nacimiento (usamos LocalDate)
+    // Fecha de nacimiento ( LocalDate)
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 

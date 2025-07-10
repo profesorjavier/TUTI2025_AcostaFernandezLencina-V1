@@ -99,15 +99,6 @@ public class FamiliaControlador {
         return "redirect:/familias/listar";
     }
 
-    // === RUTA AL MENÚ PRINCIPAL ===
-
-    @GetMapping("")
-    public String redirigirAlMenu() {
-        return "familias/menu";
-    }
-
-    @GetMapping("/menu")
-    public String menuPrincipal() {
-        return "menu";
-    }
+   
+    
 }

@@ -28,6 +28,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         
+    <dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+		</dependency>    
+        
         <!-- iText + Flying Saucer para generar PDF desde HTML -->
 		<dependency>
 		    <groupId>org.xhtmlrenderer</groupId>
