@@ -43,15 +43,7 @@ public class IntegranteService {
         integranteRepo.save(nuevo);
     }
 
-    public IntegranteDTO buscarIntegranteDTOporDni(Integer nroFamilia, Integer dni) {
-        Familia familia = familiaRepo.findBynroFamilia(nroFamilia)
-                .orElseThrow(() -> new IllegalArgumentException("Familia no encontrada"));
 
-        Integrante integrante = integranteRepo.findByDniAndFamilia(dni, familia)
-                .orElseThrow(() -> new IllegalArgumentException("Integrante no encontrado"));
-
-        return mapToDTO(integrante);
-    }
 
     @Transactional
     public void actualizarIntegrantePorDni(Integer nroFamilia, Integer dni, IntegranteDTO dto) {
@@ -91,6 +83,16 @@ public class IntegranteService {
                 .collect(Collectors.toList());
     }
 
+    public IntegranteDTO buscarIntegranteDTOporDni(Integer nroFamilia, Integer dni) {
+        Familia familia = familiaRepo.findBynroFamilia(nroFamilia)
+                .orElseThrow(() -> new IllegalArgumentException("Familia no encontrada"));
+
+        Integrante integrante = integranteRepo.findByDniAndFamilia(dni, familia)
+                .orElseThrow(() -> new IllegalArgumentException("Integrante no encontrado"));
+
+        return mapToDTO(integrante);
+    }
+
     // ========== MAPEO ==========
     private IntegranteDTO mapToDTO(Integrante i) {
         IntegranteDTO dto = new IntegranteDTO();
@@ -102,4 +104,5 @@ public class IntegranteService {
         dto.setActivo(i.getActivo());
         return dto;
     }
+
 }

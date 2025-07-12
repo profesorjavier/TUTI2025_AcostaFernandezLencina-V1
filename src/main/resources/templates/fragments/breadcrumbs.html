@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="breadcrumbs(links)">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+                <th:block th:each="link : ${links}">
+                    <li class="breadcrumb-item" th:classappend="${linkStat.last} ? 'active'">
+                        <a th:if="${!linkStat.last}" th:href="@{${link.url}}" th:text="${link.text}"></a>
+                        <span th:if="${linkStat.last}" th:text="${link.text}"></span>
+                    </li>
+                </th:block>
+            </ol>
+        </nav>
+    </div>
+</body>
+</html>

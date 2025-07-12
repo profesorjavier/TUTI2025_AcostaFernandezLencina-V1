@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/familias")
+@RequestMapping("/familias/{nroFamilia}/integrantes")
 public class IntegranteControlador {
 
     @Autowired
@@ -18,8 +18,8 @@ public class IntegranteControlador {
     @Autowired
     private FamiliaService familiaService;
 
-    // Formulario para nuevo integrante
-    @GetMapping("/{nroFamilia}/nuevoIntegrante")
+    // Formulario nuevo integrante
+    @GetMapping("/nuevo")
     public String nuevoIntegrante(@PathVariable Integer nroFamilia, Model modelo) {
         var familia = familiaService.buscarDtoPorNroFamilia(nroFamilia);
         modelo.addAttribute("integrante", new IntegranteDTO());
@@ -30,10 +30,10 @@ public class IntegranteControlador {
     }
 
     // Guardar nuevo integrante
-    @PostMapping("/{nroFamilia}/guardarIntegrante")
+    @PostMapping("/guardar")
     public String guardarIntegrante(@PathVariable Integer nroFamilia,
-                                     @ModelAttribute("integrante") IntegranteDTO dto,
-                                     Model modelo) {
+                                  @ModelAttribute("integrante") IntegranteDTO dto,
+                                  Model modelo) {
         try {
             integranteService.agregarIntegrante(nroFamilia, dto);
             return "redirect:/familias/ver/" + nroFamilia;
@@ -47,35 +47,43 @@ public class IntegranteControlador {
         }
     }
 
-    // Formulario de edición
-    @GetMapping("/{nroFamilia}/editarIntegrantePorDni/{dni}")
+    @GetMapping("/editar/{dni}")
     public String editarIntegrante(@PathVariable Integer nroFamilia,
-                                    @PathVariable Integer dni,
-                                    Model modelo) {
-        var dto = integranteService.buscarIntegranteDTOporDni(nroFamilia, dni);
-        var familia = familiaService.buscarDtoPorNroFamilia(nroFamilia);
-
-        modelo.addAttribute("integrante", dto);
-        modelo.addAttribute("familiaId", familia.getNroFamilia());
-        modelo.addAttribute("nombreFamilia", familia.getNombreFamilia());
-        modelo.addAttribute("integranteDni", dni);
-        modelo.addAttribute("modo", "editar");
-        return "familias/integrante_form";
+                                 @PathVariable Integer dni,
+                                 Model modelo) {
+        try {
+            var dto = integranteService.buscarIntegranteDTOporDni(nroFamilia, dni);
+            var familia = familiaService.buscarDtoPorNroFamilia(nroFamilia);
+            
+            // Debug: Verificar la fecha recibida
+            System.out.println("Fecha de nacimiento obtenida: " + dto.getFechaNacimiento());
+            
+            modelo.addAttribute("integrante", dto);
+            modelo.addAttribute("familiaId", familia.getNroFamilia());
+            modelo.addAttribute("nombreFamilia", familia.getNombreFamilia());
+            modelo.addAttribute("integranteDni", dni);
+            modelo.addAttribute("modo", "editar");
+            
+            return "familias/integrante_form";
+        } catch (Exception e) {
+            modelo.addAttribute("error", "Error al cargar integrante: " + e.getMessage());
+            return "redirect:/familias/ver/" + nroFamilia;
+        }
     }
 
-    // Guardar edición
-    @PostMapping("/{nroFamilia}/actualizarIntegrantePorDni/{dni}")
+    // Actualizar integrante
+    @PostMapping("/actualizar/{dni}")
     public String actualizarIntegrante(@PathVariable Integer nroFamilia,
-                                       @PathVariable Integer dni,
-                                       @ModelAttribute("integrante") IntegranteDTO dto) {
+                                      @PathVariable Integer dni,
+                                      @ModelAttribute("integrante") IntegranteDTO dto) {
         integranteService.actualizarIntegrantePorDni(nroFamilia, dni, dto);
         return "redirect:/familias/ver/" + nroFamilia;
     }
 
-    // Eliminar (inactivar) integrante
-    @GetMapping("/{nroFamilia}/eliminarIntegrantePorDni/{dni}")
+    // Eliminar integrante
+    @GetMapping("/eliminar/{dni}")
     public String eliminarIntegrante(@PathVariable Integer nroFamilia,
-                                     @PathVariable Integer dni) {
+                                    @PathVariable Integer dni) {
         integranteService.eliminarIntegrantePorDni(nroFamilia, dni);
         return "redirect:/familias/ver/" + nroFamilia;
     }
