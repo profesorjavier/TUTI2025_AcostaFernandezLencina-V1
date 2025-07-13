@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo" th:text="${receta.id == null ? 'Nueva Receta' : 'Editar Receta'}">Formulario Receta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .card-header {
+            font-weight: 600;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        .modal-backdrop {
+            z-index: 1040 !important;
+        }
+        .modal {
+            z-index: 1050 !important;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <h2 class="text-primary mb-4" th:text="${receta.id == null ? '➕ Nueva Receta' : '✏️ Editar Receta'}">Formulario Receta</h2>
+
+        <!-- Mensajes de error y éxito -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Formulario principal -->
+        <form th:action="@{/recetas/guardar}" method="post" th:object="${receta}" class="mb-4">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">Información de la Receta</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" th:field="*{nombre}" class="form-control"
+                               th:readonly="${receta.id != null}"
+                               placeholder="Ej: Sopa de verduras" required>
+                        <small class="text-muted">El nombre no podrá modificarse después</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción:</label>
+                        <textarea th:field="*{descripcion}" class="form-control" rows="3"
+                                  required placeholder="Describa la receta..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredientes actuales -->
+            <div class="card mb-4 shadow-sm" th:if="${receta.id != null}">
+                <div class="card-header bg-primary text-white">Ingredientes Actuales</div>
+                <div class="card-body">
+                    <div th:if="${receta.ingredientes.empty}" class="alert alert-info">
+                        No hay ingredientes agregados a esta receta
+                    </div>
+                    <table th:unless="${receta.ingredientes.empty}" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                            <th>Calorías</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ingReceta : ${receta.ingredientes}">
+                            <td th:text="${ingReceta.ingrediente.nombre}"></td>
+                            <td th:text="${ingReceta.cantidad}"></td>
+                            <td th:text="${ingReceta.ingrediente.unidadBase}"></td>
+                            <td th:text="${ingReceta.caloriasPorPorcion} + ' kcal'"></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary me-2"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editarCantidadModal"
+                                        th:attr="data-recid=${receta.id}, data-ingid=${ingReceta.id}, data-cantidad=${ingReceta.cantidad}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <a th:href="@{/recetas/{recetaId}/eliminarIngrediente/{ingRecetaId}(recetaId=${receta.id}, ingRecetaId=${ingReceta.id})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('¿Eliminar este ingrediente de la receta?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between mt-4">
+                <div>
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Guardar Receta
+                    </button>
+                    <a th:href="@{/recetas}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <!-- Formulario para agregar ingredientes -->
+        <div class="card mb-4 shadow-sm" th:if="${receta.id != null}">
+            <div class="card-header bg-success text-white">Agregar Nuevos Ingredientes</div>
+            <div class="card-body">
+                <form th:action="@{/recetas/{recetaId}/agregarIngrediente(recetaId=${receta.id})}"
+                      method="post" class="row g-3">
+                    <div class="col-md-5">
+                        <select name="ingredienteId" class="form-select" required>
+                            <option value="">Seleccione un ingrediente</option>
+                            <option th:each="ing : ${ingredientesDisponibles}"
+                                    th:value="${ing.id}"
+                                    th:text="${ing.nombre} + ' (' + ${ing.unidadBase} + ')'"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="cantidad" step="0.01" min="0.01"
+                               class="form-control" placeholder="Cantidad" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg"></i> Agregar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal editar cantidad -->
+    <div class="modal fade" id="editarCantidadModal" tabindex="-1" aria-labelledby="editarCantidadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modificar Cantidad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formEditarCantidad" method="post" onsubmit="return false;">
+                    <div class="modal-body">
+                        <input type="hidden" id="recetaId" name="recetaId">
+                        <input type="hidden" id="ingRecetaId" name="ingRecetaId">
+                        <div class="mb-3">
+                            <label for="nuevaCantidad" class="form-label">Nueva Cantidad:</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control"
+                                   id="nuevaCantidad" name="nuevaCantidad" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="actualizarCantidad()">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var cantidadModal = null;
+
+    function actualizarCantidad() {
+        const form = document.getElementById('formEditarCantidad');
+        const formData = new FormData(form);
+        const recetaId = document.getElementById('recetaId').value;
+
+        const btnGuardar = form.querySelector('button[type="button"]');
+        btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+        btnGuardar.disabled = true;
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                if (cantidadModal) {
+                    cantidadModal.hide();
+                }
+                location.reload();
+            } else {
+                return response.text().then(msg => {
+                    throw new Error(msg || "Error al actualizar");
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Ocurrió un error: " + error.message);
+            btnGuardar.innerHTML = 'Guardar Cambios';
+            btnGuardar.disabled = false;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        cantidadModal = new bootstrap.Modal(document.getElementById('editarCantidadModal'));
+
+        document.getElementById('editarCantidadModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            document.getElementById('recetaId').value = button.getAttribute('data-recid');
+            document.getElementById('ingRecetaId').value = button.getAttribute('data-ingid');
+            document.getElementById('nuevaCantidad').value = button.getAttribute('data-cantidad');
+            document.getElementById('formEditarCantidad').action =
+                '/recetas/' + button.getAttribute('data-recid') + '/actualizarCantidad';
+        });
+    });
+</script>
+</body>
+</html>

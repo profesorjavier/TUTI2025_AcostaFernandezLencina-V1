@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo" th:text="${preparacion.id == null ? 'Nueva Preparación' : 'Editar Preparación'}">Formulario Preparación</title>
+</head>
+
+<div layout:fragment="content">
+
+    <h2 class="text-primary" th:text="${preparacion.id == null ? '➕ Nueva Preparación' : '✏️ Editar Preparación'}">Formulario Preparación</h2>
+
+    <!-- Mostrar error -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <form th:action="@{/preparaciones/guardar}" method="post" th:object="${preparacion}" class="mb-4">
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Campo de Fecha con comportamiento condicional -->
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha:</label>
+
+            <!-- Alta: selector de fecha -->
+            <input type="date" th:if="${preparacion.id == null}"
+                   th:field="*{fecha}" class="form-control" required />
+
+            <!-- Edición: campo de texto editable -->
+			<input type="text" th:if="${preparacion.id != null}"
+			       class="form-control" name="fecha"
+			       th:value="${preparacion.fecha}" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="receta" class="form-label">Receta:</label>
+            <select th:field="*{receta}" class="form-select" required>
+                <option value="">-- Seleccione una receta --</option>
+                <option th:each="rec : ${recetas}"
+                        th:value="${rec.id}"
+                        th:text="${rec.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="cantidadRaciones" class="form-label">Cantidad de raciones:</label>
+            <input type="number" min="1" th:field="*{cantidadRaciones}" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Guardar</button>
+        <a th:href="@{/preparaciones}" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+
+</div>
+</html>

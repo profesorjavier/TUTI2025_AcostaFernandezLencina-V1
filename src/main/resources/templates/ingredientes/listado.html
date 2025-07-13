@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo">Listado de Ingredientes</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">🍏 Ingredientes</h1>
+                <a th:href="@{/ingredientes/nuevo}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nuevo Ingrediente
+                </a>
+            </div>
+            
+            <!-- Búsqueda -->
+            <form class="mb-4" th:action="@{/ingredientes}" method="get">
+                <div class="input-group">
+                    <input type="text" name="nombre" th:value="${param.nombre}" 
+                           class="form-control" placeholder="Buscar por nombre...">
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Mensaje si no hay ingredientes -->
+            <div th:if="${ingredientes.empty}" class="alert alert-info">
+                No se encontraron ingredientes.
+            </div>
+            
+            <!-- Tabla -->
+            <div th:unless="${ingredientes.empty}" class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Unidad Base</th>
+								<th>Calorías por Unidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ing : ${ingredientes}">
+                                <td th:text="${ing.nombre}"></td>
+                                <td>
+                                    <span th:switch="${ing.unidadBase}">
+                                        <span th:case="'g'">Gramos</span>
+                                        <span th:case="'ml'">Mililitros</span>
+                                        <span th:case="'unidades'">Unidades</span>
+                                        <span th:case="*" th:text="${ing.unidadBase}"></span>
+                                    </span>
+                                </td>
+								<td th:text="${ing.caloriasPorUnidad}"></td>
+
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/ingredientes/editar/{id}(id=${ing.id})}" 
+                                           class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+                                        <a th:href="@{/ingredientes/eliminar/{id}(id=${ing.id})}" 
+                                           class="btn btn-outline-danger"
+                                           onclick="return confirm('¿Estás seguro de eliminar este ingrediente?')">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap JS y dependencias -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    </div>
+</body>
+</html>
