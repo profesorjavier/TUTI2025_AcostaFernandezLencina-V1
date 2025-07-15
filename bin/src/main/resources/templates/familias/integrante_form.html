@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo" th:text="${modo == 'editar'} ? 'Editar Integrante' : 'Nuevo Integrante'">Integrante</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0" th:text="${modo == 'editar'} ? '✏️ Editar Integrante' : '➕ Nuevo Integrante'"></h2>
+            </div>
+            
+            <div class="card-body">
+                <!-- Mostrar errores generales -->
+                <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+                
+                <p class="lead"><strong>Familia:</strong> <span th:text="${nombreFamilia}"></span></p>
+
+                <form th:action="@{${modo == 'editar'} ? 
+                    '/familias/' + ${familiaId} + '/integrantes/actualizar/' + ${integranteDni} : 
+                    '/familias/' + ${familiaId} + '/integrantes/guardar'}"
+                      th:object="${integrante}" method="post">
+
+                    <!-- Mostrar errores de validación -->
+                    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                        <ul class="mb-0">
+                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
+
+                    <!-- Campo DNI -->
+                    <div class="mb-3">
+                        <label class="form-label">DNI:</label>
+                        <input type="number" th:field="*{dni}" class="form-control" 
+                               th:readonly="${modo == 'editar'}" required min="1000000" max="99999999"/>
+                        <small class="text-danger" th:if="${#fields.hasErrors('dni')}" 
+                               th:errors="*{dni}">Error en DNI</small>
+                    </div>
+
+                    <!-- Campo Apellido -->
+                    <div class="mb-3">
+                        <label class="form-label">Apellido:</label>
+                        <input type="text" th:field="*{apellido}" class="form-control" required maxlength="50"/>
+                        <small class="text-danger" th:if="${#fields.hasErrors('apellido')}" 
+                               th:errors="*{apellido}">Error en apellido</small>
+                    </div>
+
+                    <!-- Campo Nombre -->
+                    <div class="mb-3">
+                        <label class="form-label">Nombre:</label>
+                        <input type="text" th:field="*{nombre}" class="form-control" required maxlength="50"/>
+                        <small class="text-danger" th:if="${#fields.hasErrors('nombre')}" 
+                               th:errors="*{nombre}">Error en nombre</small>
+                    </div>
+
+					<div class="mb-3">
+					    <label class="form-label">Fecha de Nacimiento:</label>
+
+					    <!-- Alta: selector de fecha -->
+					    <input type="date"
+					           th:if="${modo != 'editar'}"
+					           th:field="*{fechaNacimiento}"
+					           class="form-control" required />
+
+					    <!-- Edición: campo de texto con formato yyyy-MM-dd -->
+					    <input type="text"
+					           th:if="${modo == 'editar'}"
+					           
+							   th:value="${#temporals.format(integrante.fechaNacimiento, 'yyyy-MM-dd')}"
+					           pattern="\d{4}-\d{2}-\d{2}"
+					           placeholder="YYYY-MM-DD"
+					           class="form-control"
+					           required />
+							   
+					</div>
+
+
+
+
+                    <!-- Campo Ocupación -->
+                    <div class="mb-3">
+                        <label class="form-label">Ocupación:</label>
+                        <select th:field="*{ocupacion}" class="form-select" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Estudiante">Estudiante</option>
+                            <option value="Empleado">Empleado</option>
+                            <option value="Desempleado">Desempleado</option>
+                            <option value="Ama de casa">Ama de casa</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                        <small class="text-danger" th:if="${#fields.hasErrors('ocupacion')}" 
+                               th:errors="*{ocupacion}">Error en ocupación</small>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a th:href="@{'/familias/listar'}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fragmento para scripts adicionales -->
+<div layout:fragment="scripts">
+    <!-- Puedes agregar scripts específicos para esta página aquí -->
+</div>

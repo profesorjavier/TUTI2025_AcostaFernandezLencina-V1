@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Inicio - Sistema de Gestión</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="jumbotron bg-light p-5 rounded-lg m-3">
+        <h1 class="display-4">Bienvenido al Sistema de Gestión</h1>
+        <p class="lead">Sistema integral para la gestión de familias, recetas y preparaciones.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Gestión de Familias</h5>
+                    <p class="card-text">Administración completa de familias e integrantes.</p>
+                    <a th:href="@{/familias/listar}" class="btn btn-primary">Acceder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Gestión de Recetas</h5>
+                    <p class="card-text">Administración de recetas e ingredientes.</p>
+                    <a th:href="@{/recetas}" class="btn btn-primary">Acceder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Gestión de Preparaciones</h5>
+                    <p class="card-text">Registro y seguimiento de preparaciones.</p>
+                    <a th:href="@{/preparaciones}" class="btn btn-primary">Acceder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
