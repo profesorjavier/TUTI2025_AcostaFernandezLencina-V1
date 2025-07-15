@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 projectKey=TUTI2025
 serverUrl=http://localhost:9000
 serverVersion=25.6.0.109173
 dashboardUrl=http://localhost:9000/dashboard?id=TUTI2025
 ceTaskId=a1d6997d-d1c8-4d09-b356-ab5726fd13ee
 ceTaskUrl=http://localhost:9000/api/ce/task?id=a1d6997d-d1c8-4d09-b356-ab5726fd13ee
+=======
+projectKey=TUTI2025
+serverUrl=http://localhost:9000
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9000/dashboard?id=TUTI2025
+ceTaskId=a1d6997d-d1c8-4d09-b356-ab5726fd13ee
+ceTaskUrl=http://localhost:9000/api/ce/task?id=a1d6997d-d1c8-4d09-b356-ab5726fd13ee
+>>>>>>> branch 'master' of https://github.com/profesorjavier/TUTI2025_AcostaFernandezLencina-V1.git

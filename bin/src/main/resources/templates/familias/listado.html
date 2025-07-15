@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -124,4 +125,132 @@
 
     </div>
 </div>
+=======
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo">ABM Familias</title>
+</head>
+
+<div layout:fragment="content">
+
+    <h1 class="text-primary mb-4"
+        th:text="${modo != null and modo.equals('completo')} ? 'Listado Completo de Familias e Integrantes' : 'ABM Familias'">
+        ABM Familias
+    </h1>
+
+    <!-- 🔍 Filtros y acciones generales -->
+    <div th:if="${modo == null or !modo.equals('completo')}">
+        <form th:action="@{/familias/listar}" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <input type="text" name="busqueda" class="form-control"
+                       placeholder="Buscar por nombre o número..." th:value="${param.busqueda}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">🔍 Buscar</button>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-secondary w-100" th:href="@{/familias/listadoCompleto}">📄 Ver listado completo</a>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-success w-100" th:href="@{/familias/nueva}">➕ Nueva Familia</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 👨‍👩‍👧 Listado completo con integrantes -->
+    <div th:if="${modo != null and modo.equals('completo') and familias != null}">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Nro Familia</th>
+                <th>Nombre Familia</th>
+                <th>Integrantes</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="f : ${familias}">
+                <td th:text="${f.nroFamilia}"></td>
+                <td th:text="${f.nombreFamilia}"></td>
+                <td>
+                    <ul class="mb-0">
+                        <li th:each="i : ${f.integrantes}"
+                            th:text="${i.apellido + ', ' + i.nombre + ' (' + i.dni + ')'}"></li>
+                    </ul>
+                </td>
+                <td>
+                    <span th:text="${f.activo ? 'Activo' : 'Inactivo'}"
+                          th:class="${f.activo ? 'text-success' : 'text-danger'}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/familias/listar}" class="btn btn-outline-secondary">⬅️ Volver</a>
+        <a th:href="@{/familias/exportar-pdf}" class="btn btn-outline-dark">📥 Exportar PDF</a>
+    </div>
+
+    <!-- 🟢 Activas + Inactivas -->
+    <div th:if="${modo == null or !modo.equals('completo')}">
+
+        <h4>👨‍👩‍👧 Familias Activas</h4>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Nro</th>
+                <th>Nombre</th>
+                <th>Fecha Alta</th>
+                <th>Integrantes</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="f : ${familiasActivas}">
+                <td th:text="${f.nroFamilia}"></td>
+                <td th:text="${f.nombreFamilia}"></td>
+                <td th:text="${f.fechaAlta}"></td>
+                <td th:text="${f.integrantes.size()}"></td>
+                <td>
+                    <a th:href="@{'/familias/editar/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-primary">✏️</a>
+                    <a th:href="@{'/familias/inactivar/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('¿Inactivar esta familia?')">🗑️</a>
+                    <a th:href="@{'/familias/ver/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-info">👁️</a>
+                    <a th:href="@{'/familias/' + ${f.nroFamilia} + '/integrantes/nuevo'}"
+                       class="btn btn-sm btn-outline-success">➕</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4 class="mt-5">📂 Familias Inactivas</h4>
+        <table class="table table-bordered table-hover table-sm">
+            <thead class="table-light">
+            <tr>
+                <th>Nro</th>
+                <th>Nombre</th>
+                <th>Fecha Alta</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="f : ${familiasInactivas}">
+                <td th:text="${f.nroFamilia}"></td>
+                <td th:text="${f.nombreFamilia}"></td>
+                <td th:text="${f.fechaAlta}"></td>
+                <td>
+					<a th:href="@{'/familias/reactivar/' + ${f.nroFamilia}}"
+					   th:attr="onclick=|return confirm('¿Reactivar la familia ${f.nombreFamilia}?')|"
+					   class="btn btn-sm btn-outline-warning">♻️</a>
+
+                    <a th:href="@{'/familias/ver/' + ${f.nroFamilia}}" class="btn btn-sm btn-outline-info">👁️</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+>>>>>>> branch 'master' of https://github.com/profesorjavier/TUTI2025_AcostaFernandezLencina-V1.git
 </html>

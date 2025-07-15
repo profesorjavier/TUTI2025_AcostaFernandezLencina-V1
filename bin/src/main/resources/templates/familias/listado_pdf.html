@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -63,4 +64,71 @@
 </table>
 
 </body>
+=======
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Listado de Familias</title>
+    <style>
+        body { font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td {
+            padding: 8px;
+            border: 1px solid black;
+            text-align: left;
+        }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+
+<h1>Listado Completo de Familias</h1>
+
+<h2>Familias Activas</h2>
+<table>
+    <thead style="background-color: #f0f0f0;">
+        <tr>
+            <th>Nro Familia</th>
+            <th>Nombre Familia</th>
+            <th>Integrantes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="f : ${familiasActivas}">
+            <td th:text="${f.nroFamilia}"></td>
+            <td th:text="${f.nombreFamilia}"></td>
+            <td>
+                <ul>
+                    <li th:each="i : ${f.integrantes}" th:text="${i.apellido + ', ' + i.nombre}"></li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Familias Inactivas</h2>
+<table>
+    <thead style="background-color: #f0f0f0;">
+        <tr>
+            <th>Nro Familia</th>
+            <th>Nombre Familia</th>
+            <th>Integrantes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="f : ${familiasInactivas}">
+            <td th:text="${f.nroFamilia}"></td>
+            <td th:text="${f.nombreFamilia}"></td>
+            <td>
+                <ul>
+                    <li th:each="i : ${f.integrantes}" th:text="${i.apellido + ', ' + i.nombre}"></li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+>>>>>>> branch 'master' of https://github.com/profesorjavier/TUTI2025_AcostaFernandezLencina-V1.git
 </html>

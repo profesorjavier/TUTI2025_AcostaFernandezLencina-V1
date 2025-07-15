@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -22,3 +23,29 @@
 </div>
 	
 </html>
+=======
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title layout:fragment="titulo">Menú Principal</title>
+</head>
+<div layout:fragment="contenido">
+    <h1 class="text-primary">🏠 Menú Principal de la Organización</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <a th:href="@{/familias/listar}" class="btn btn-outline-primary w-100 mb-2">👨‍👩‍👧 ABM Familias</a>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-secondary w-100 mb-2" disabled>🎒 Escolaridad</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-secondary w-100 mb-2" disabled>💊 Salud</button>
+        </div>
+    </div>
+</div>
+	
+</html>
+>>>>>>> branch 'master' of https://github.com/profesorjavier/TUTI2025_AcostaFernandezLencina-V1.git

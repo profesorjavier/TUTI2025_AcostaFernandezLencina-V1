@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 /mvnw text eol=lf
 *.cmd text eol=crlf
+=======
+/mvnw text eol=lf
+*.cmd text eol=crlf
+>>>>>>> branch 'master' of https://github.com/profesorjavier/TUTI2025_AcostaFernandezLencina-V1.git
